@@ -1,0 +1,14 @@
+[
+  {"query": "sync this component to Figma", "should_trigger": true, "expected_tools": ["code-to-figma", "mcp_code_to_figma_scan"]},
+  {"query": "generate Figma from code", "should_trigger": true, "expected_tools": ["code-to-figma"]},
+  {"query": "create design system in Figma from components", "should_trigger": true, "expected_tools": ["code-to-figma"]},
+  {"query": "convert Button.tsx to Figma", "should_trigger": true},  
+  {"query": "sync dashboard to Figma", "should_trigger": true},
+  {"query": "scan components for Figma", "should_trigger": true},
+  {"query": "export all components to Figma plugin", "should_trigger": true},
+  {"query": "code to figma", "should_trigger": true},
+  {"query": "update Figma from code", "should_trigger": true},
+  {"query": "fix the button", "should_trigger": false},
+  {"query": "update CSS", "should_trigger": false},
+  {"query": "take a screenshot", "should_trigger": false}
+]

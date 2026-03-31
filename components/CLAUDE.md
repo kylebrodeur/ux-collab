@@ -4,25 +4,55 @@
 
 This directory contains all React components. Each component must follow the design system rules, use semantic tokens, and document its states.
 
-## Component Structure
-
-Each component lives in its own directory:
-
-```
-components/
-├── Button/
-│   ├── Button.tsx           # Component implementation
-│   ├── Button.css           # Component styles (optional)
-│   ├── Button.test.tsx      # Tests
-│   └── Button.stories.tsx   # Storybook stories (optional)
-├── Card/
-│   └── ...
-└── CLAUDE.md                # This file
-```
-
 ## Component Requirements
 
-### 1. Token Compliance
+### 0. Tech Stack Preferences (ALWAYS CHECK FIRST)
+
+Before implementing any component, read `.ux-collab.md` `preferences` section:
+
+```yaml
+# Example preferences from .ux-collab.md
+preferences:
+  framework: react
+  components:
+    library: shadcn
+    primitives: base-ui        # NOT Radix
+    registry:
+      - @react-bits
+      - @magicui
+    aliases:
+      components: "@/components"
+      utils: "@/lib/utils"
+  styling:
+    solution: tailwindcss
+    version: "4"              # Not v3
+  quality:
+    strictTypes: true
+```
+
+**MUST follow when building:**
+- ✅ Use specified framework (React, Vue, etc.)
+- ✅ Use specified primitive library (base-ui vs Radix)
+- ✅ Use Tailwind v4 syntax if specified (not v3)
+- ✅ Can install from approved registries without asking
+- ✅ Use specified import aliases
+- ❌ NEVER use different primitives than specified
+- ❌ NEVER use Tailwind v3 syntax with v4 preference
+
+**Installing components:**
+```bash
+# 1. Check if exists in local codebase first
+ls src/components/ | grep -i button
+
+# 2. If shadcn preference: use shadcn CLI
+npx shadcn add button
+
+# 3. If additional registries: install from there
+# (e.g., @react-bits, @magicui)
+
+# 4. If custom: build from preferred primitives
+# base-ui example: npm install @base-ui-components/react
+```
 
 ```tsx
 // ✅ Correct: Uses semantic tokens

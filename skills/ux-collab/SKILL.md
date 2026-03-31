@@ -310,23 +310,68 @@ ls app/ components/ src/ 2>/dev/null | head -20
 
 ### Universal Code Rules:
 - **All colors via design tokens only** — no inline hex values
-- **Use project's existing component system** (shadcn/ui, Radix, MUI, etc.) — extend, don't replace
-- **No new dependencies** without explicit discussion
+- **Use project's existing component system** — check `.ux-collab.md` `preferences.components.library`
+- **Respect tech stack preferences** from `.ux-collab.md`:
+  - Framework: React/Vue/Svelte as specified
+  - Styling: Tailwind v4 vs v3, CSS modules, etc.
+  - Primitives: base-ui, Radix, Headless UI as specified
+  - Additional registries: @react-bits, @magicui, etc.
+- **No new dependencies** without explicit discussion (except from approved registries)
 - **Accessibility semantics:** correct heading levels, button vs. link, ARIA labels on interactive elements
 - **Match Figma tokens** via mcp_figma_get_design_tokens when available
 
 ### Design System Check (if Figma MCP available):
 ```
 Before coding:
+[ ] Read .ux-collab.md preferences section
 [ ] mcp_figma_search_components → Find matching component
 [ ] mcp_figma_get_code → Pull Code Connect snippet
-[ ] Verify component exists in local codebase
+[ ] Check component matches preferred primitives (base-ui vs Radix, from preferences)
+[ ] Verify component exists in local codebase OR installable from approved registries
 [ ] Check token names match local CSS
+
+If component uses wrong primitive library:
+→ Search additional registries listed in preferences
+→ Consider building from scratch with preferred primitives
+→ Document why in decisions file
 
 If component missing or tokens mismatch:
 → Flag for design system update
 → Document in decisions file
 ```
+
+### Tech Stack Preferences (from .ux-collab.md):
+
+**Check preferences at start of BUILD:**
+```
+preferences:
+  framework: react              # Build React components, not Vue
+  components:
+    library: shadcn            # Use shadcn/ui patterns
+    primitives: base-ui        # NOT Radix — use base-ui equivalents
+  styling:
+    solution: tailwindcss
+    version: "4"               # Use Tailwind v4 patterns
+  quality:
+    strictTypes: true           # Full TypeScript with strict mode
+```
+
+**Implementation guidance based on preferences:**
+
+| Preference | Implementation Rule |
+|------------|---------------------|
+| `components.library: shadcn` | Use `npx shadcn add`, not `npm install` |
+| `components.primitives: base-ui` | Import from `@base-ui-components/react`, not `@radix-ui` |
+| `components.registry: [@react-bits]` | Can install from these registries without asking |
+| `styling.version: "4"` | Use Tailwind v4 `@import` syntax, not v3 directives |
+| `language: typescript` | Full TypeScript types, no `any` |
+| `framework: react` | Use Server Components where appropriate |
+
+**Component installation priority:**
+1. Does component already exist in local codebase? → Use existing
+2. Is it in shadcn built-in registry? → `npx shadcn add [component]`
+3. Is it in approved additional registries? → Install from that registry
+4. Neither? → Build from preferred primitives (base-ui, not Radix)
 
 ---
 
@@ -369,20 +414,40 @@ agent-browser screenshot tablet.png
 
 ---
 
-## Step 7 — SYNC (Future: Code-to-Figma)
+## Step 7 — SYNC (Code-to-Figma)
 
-When Figma releases code-to-design features:
+Sync implementation to Figma for design documentation.
 
+### When to Use:
+- Code-first development workflow
+- Keeping Figma in sync with shipped code  
+- Generating design system from implementation
+
+### Workflow:
+
+```bash
+# 1. Scan component
+code-to-figma scan src/components/Button.tsx
+
+# 2. Generate plugin bundle
+code-to-figma plugin-output -i .figma -o plugin-data.json
+
+# 3. Import in Figma:
+# Plugins → Code to Figma → Import from JSON
 ```
-Proposed workflow:
-1. Implement in code using verified tokens
-2. AI detects components in implementation
-3. Push component instances back to Figma
-4. Auto-generate design specs from code
-5. Update Design System documentation
+
+### Configuration
+
+Add to `.ux-collab.md`:
+
+```yaml
+codeToFigma:
+  enabled: true
+  outputDir: ".figma"
+  onBuild: true      # Sync after successful build
 ```
 
-For now: Document implementation notes in decisions file.
+See: [code-to-figma skill](../code-to-figma/SKILL.md) for full documentation.
 
 ---
 
@@ -532,42 +597,97 @@ Preview:     agent-browser open <lucidShareUrl>
 
 ## Updated .ux-collab.md Format
 
-Add these optional fields for Figma integration:
+```yaml
+# UX Collab — Project Config
 
-```markdown
----
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# REQUIRED SETTINGS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 defaultUrl: http://localhost:3000
 decisionsDoc: docs/DESIGN_DECISIONS.md
 
-# Figma Integration (optional)
-figmaFileUrl: https://www.figma.com/design/ABC123/file-name
-figmaPrototypingBranch: "Design System"
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# TECH STACK PREFERENCES (NEW)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+preferences:
+  # Framework
+  framework: react                    # react, vue, svelte, solid
+  language: typescript                # typescript, javascript
+  
+  # Styling
+  styling:
+    solution: tailwindcss             # tailwindcss, css-modules, styled-components
+    version: "4"                      # 3 or 4 for Tailwind
+    config: app/globals.css           # Path to main CSS/tailwind config
+  
+  # Component System
+  components:
+    library: shadcn                   # shadcn, ark-ui, mantine, etc.
+    primitives: base-ui               # base-ui, radix, headlessui (for shadcn)
+    registry:                           # Additional shadcn-compatible registries
+      - @react-bits
+      - @magicui
+      - @aceternity
+    aliases:                          # Import aliases
+      components: "@/components"
+      utils: "@/lib/utils"
+  
+  # Code Quality
+  quality:
+    strictTypes: true
+    lintCommand: "npm run lint"
+    formatCommand: "npm run format"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# FIGMA INTEGRATION (OPTIONAL)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+figmaFileUrl: https://www.figma.com/design/ABC123/your-file
 codeConnectEnabled: true
 
-# Component registry (for validation)
-components:
-  Button: { figmaId: "123:456", codePath: "src/components/Button.tsx" }
-  Card: { figmaId: "123:789", codePath: "src/components/Card.tsx" }
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# TARGET FILES
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Token mappings
+targetFiles:
+  tokens: app/globals.css
+  components: app/_components/
+  layouts: app/layouts/
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# DESIGN TOKENS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 brandTokens:
   colors:
-    primary: --brand-primary
-    secondary: --brand-secondary
+    primary: --color-primary
+    secondary: --color-secondary
   spacing:
     sm: --space-4
     md: --space-8
     lg: --space-16
 
-targetFiles:
-  tokens: src/styles/tokens.css
-  components: src/components/
-  
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# SURFACE MAP
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 surfaces:
+  - name: Homepage
+    route: /
+    components: [Hero, FeatureGrid, Footer]
   - name: Dashboard
     route: /dashboard
-    components: [Card, Button, DataTable]
----
+    components: [Sidebar, DataTable, Card]
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# OPEN DECISIONS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+openDecisions:
+  - Navigation pattern — sidebar vs. top nav
+  - Mobile layout — stacked vs. tabs
 ```
 
 ---

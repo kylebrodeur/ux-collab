@@ -26,9 +26,33 @@ Every task must pass these gates before being considered complete:
 ### Cannot Proceed If:
 
 - [ ] **Design verification** finds token mismatches (when Figma MCP available)
+- [ ] **Tech stack compliance** violated (wrong primitives, wrong Tailwind version, etc.)
 - [ ] **Build fails** (compilation errors)
 - [ ] **Lint fails** (code style violations)
 - [ ] **CLAUDE.md compliance checker** finds workflow violations
+
+### Tech Stack Compliance (NEW)
+
+Before BUILD phase, verify preferences from `.ux-collab.md`:
+
+```
+Required checks:
+[ ] Component uses specified primitive library (base-ui, Radix, etc.)
+[ ] Tailwind version matches preference (v3 vs v4)
+[ ] Framework matches (React, Vue, Svelte, etc.)
+[ ] TypeScript strictness matches preference
+[ ] Component is from approved registry OR built from preferred primitives
+```
+
+**Preferred primitives mapping:**
+- `base-ui` → import from `@base-ui-components/react`
+- `radix-ui` → import from `@radix-ui/react-*`
+- `headlessui` → import from `@headlessui/react`
+
+**Tailwind v4 vs v3 compatibility:**
+- v4: Uses `@import "tailwindcss"` and CSS-first config
+- v3: Uses `@tailwind` directives and JS config
+- **NEVER mix v3 and v4 patterns in same project**
 
 ### Token Compliance Rules
 
@@ -253,6 +277,11 @@ MCP Instructions:
 ```
 [ ] Read CLAUDE.md (this file)
 [ ] Read .ux-collab.md (project config)
+[ ] CHECK preferences section in .ux-collab.md:
+    - Framework: React/Vue/Svelte → use correct patterns
+    - Primitives: base-ui/Radix/Headless → use correct imports
+    - Tailwind: v3 vs v4 → use correct syntax
+    - Approved registries → can install without asking
 [ ] Check agent-browser: agent-browser --version
 [ ] Check Figma MCP: verify .mcp.json has figma server
 [ ] Determine phase: IDEATE, SPECIFY, BUILD, or VERIFY
@@ -261,9 +290,11 @@ MCP Instructions:
 
 ### Before BUILD
 ```
+[ ] Read .ux-collab.md preferences again
 [ ] Pull tokens from Figma (if available): mcp_figma_get_variables
 [ ] Verify component exists: mcp_figma_search_components
 [ ] Get Code Connect snippet: mcp_figma_get_code
+[ ] Check component matches preferred primitives (base-ui vs Radix)
 [ ] Confirm all tokens exist in local CSS
 ```
 
@@ -273,6 +304,7 @@ MCP Instructions:
 [ ] Run token-analyzer agent
 [ ] Screenshot implementation: agent-browser screenshot
 [ ] Compare to Figma: mcp_figma_get_screenshot (if available)
+[ ] Verify tech stack compliance: primitives, Tailwind version, etc.
 ```
 
 ### Before RECORD
@@ -280,7 +312,7 @@ MCP Instructions:
 [ ] MUST: Run component-compliance-checker agent
 [ ] Update DESIGN_DECISIONS.md
 [ ] Link to Figma frames used (if applicable)
-```
+[ ] Document any tech stack exceptions (if had to deviate from preferences)
 
 ## Resources
 
