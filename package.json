@@ -1,7 +1,7 @@
 {
   "name": "ux-collab",
-  "version": "2.0.0",
-  "description": "Visual-first UI/UX collaboration agent skill for Claude Code and GitHub Copilot — Playwright screenshots + Lucid wireframes + structured design loop",
+  "version": "2.1.0",
+  "description": "Visual-first UI/UX collaboration agent skill for Claude Code and GitHub Copilot — agent-browser (primary) + Playwright (alternative) + Lucid wireframes + structured design loop",
   "private": false,
   "type": "module",
   "bin": {
@@ -21,6 +21,7 @@
     "ux",
     "ui",
     "design",
+    "agent-browser",
     "playwright",
     "lucid",
     "wireframe",
