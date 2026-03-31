@@ -1,0 +1,12 @@
+{
+  "agents": [
+    {
+      "name": "ux-collab",
+      "description": "Visual-first UI/UX collaboration loop using Playwright for live app review and Lucid for wireframes. Follows the SEE → DISCUSS → DESIGN → BUILD → VERIFY → RECORD loop.",
+      "skills": [
+        "skills/ux-collab/SKILL.md",
+        "skills/ux-collab-setup/SKILL.md"
+      ]
+    }
+  ]
+}

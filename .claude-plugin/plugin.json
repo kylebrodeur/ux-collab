@@ -1,0 +1,16 @@
+{
+  "name": "ux-collab",
+  "version": "2.0.0",
+  "description": "Visual-first UI/UX collaboration workflow using Playwright (live app screenshots) and Lucid (wireframes). Provides a structured SEE → DISCUSS → DESIGN → BUILD → VERIFY → RECORD loop for any web app.",
+  "author": {
+    "name": "kylebrodeur"
+  },
+  "repository": "https://github.com/kylebrodeur/ux-collab",
+  "homepage": "https://github.com/kylebrodeur/ux-collab",
+  "license": "MIT",
+  "keywords": ["ux", "ui", "design", "playwright", "lucid", "wireframe", "screenshot", "visual", "collaboration"],
+  "skills": {
+    "ux-collab": "./skills/ux-collab",
+    "ux-collab-setup": "./skills/ux-collab-setup"
+  }
+}

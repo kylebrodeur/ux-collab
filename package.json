@@ -1,0 +1,46 @@
+{
+  "name": "ux-collab",
+  "version": "2.0.0",
+  "description": "Visual-first UI/UX collaboration agent skill for Claude Code and GitHub Copilot — Playwright screenshots + Lucid wireframes + structured design loop",
+  "private": false,
+  "type": "module",
+  "bin": {
+    "ux-collab": "cli.cjs"
+  },
+  "scripts": {
+    "check": "bash scripts/check.sh",
+    "setup": "bash scripts/setup.sh",
+    "optimize-screenshot": "bash skills/ux-collab/optimize-screenshot.sh"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "copilot",
+    "github-copilot",
+    "agent",
+    "ux",
+    "ui",
+    "design",
+    "playwright",
+    "lucid",
+    "wireframe",
+    "screenshot",
+    "visual",
+    "collaboration",
+    "skill",
+    "agent-skill"
+  ],
+  "author": "kylebrodeur",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kylebrodeur/ux-collab.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kylebrodeur/ux-collab/issues"
+  },
+  "homepage": "https://github.com/kylebrodeur/ux-collab#readme"
+}

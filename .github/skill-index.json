@@ -1,0 +1,37 @@
+{
+  "name": "UX Collab",
+  "description": "Visual-first UI/UX collaboration skills using Playwright and Lucid",
+  "skills": [
+    {
+      "name": "ux-collab",
+      "path": "skills/ux-collab/SKILL.md",
+      "description": "Full SEE → DISCUSS → DESIGN → BUILD → VERIFY → RECORD loop for UI/UX sessions",
+      "tags": ["ux", "ui", "design", "playwright", "lucid", "wireframe", "screenshot", "visual"]
+    },
+    {
+      "name": "ux-collab-setup",
+      "path": "skills/ux-collab-setup/SKILL.md",
+      "description": "Install and configure all ux-collab dependencies — ImageMagick, Playwright MCP, Lucid MCP, project config",
+      "tags": ["setup", "install", "dependencies", "ux-collab"]
+    }
+  ],
+  "agents": [
+    {
+      "name": "ux-collab",
+      "path": ".github/copilot.json",
+      "description": "Visual-first UX collaboration agent",
+      "skills": ["ux-collab"]
+    }
+  ],
+  "keywords": [
+    "claude-code",
+    "github-copilot",
+    "ux",
+    "ui",
+    "design",
+    "playwright",
+    "lucid",
+    "wireframe",
+    "screenshot"
+  ]
+}

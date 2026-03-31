@@ -1,0 +1,41 @@
+# Project: UX Collab — Visual-First UI/UX Agent Skill
+
+## What This Is
+
+A reusable agent skill package for visual-first UI/UX collaboration. Contains one skill (`ux-collab`) plus Claude Code and GitHub Copilot plugin manifests.
+
+## Structure
+
+```
+skills/
+└── ux-collab/
+    ├── SKILL.md                 # The skill (project-agnostic)
+    ├── optimize-screenshot.sh   # Screenshot optimization helper
+    └── docs/
+        └── project-setup.md    # Per-project .ux-collab.md config guide
+.claude-plugin/
+└── plugin.json                  # Claude Code Marketplace manifest
+.github/
+├── copilot.json                 # GitHub Copilot agent definition
+├── skill-index.json             # Discovery index
+└── plugin/
+    └── plugin.json              # Copilot plugin manifest
+```
+
+## Skills
+
+| Skill | Trigger |
+|-------|---------|
+| `ux-collab` | "let's work on the UI", "show me what it looks like", "take a screenshot", "create a wireframe", "design the layout" |
+
+## Key Design Decisions
+
+- **Skill is project-agnostic** — all project-specific config (routes, brand tokens, file paths, open decisions) lives in a `.ux-collab.md` file at the consuming project's root
+- **Lucid is optional** — skill has a full Markdown wireframe fallback for Step 3
+- **Script uses relative path** — `./optimize-screenshot.sh` is always resolved relative to the SKILL.md location
+
+## When Contributing
+
+- Keep SKILL.md project-agnostic — no hardcoded routes, paths, or brand tokens
+- Update `docs/project-setup.md` if the `.ux-collab.md` schema changes
+- Bump `version` in both `package.json` and `SKILL.md` frontmatter metadata when making changes
