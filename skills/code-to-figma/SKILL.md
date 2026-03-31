@@ -305,6 +305,7 @@ code-to-figma scan Button.tsx --validate
 
 ## Resources
 
-- [code-to-figma CLI docs](../../code-to-figma/README.md)
-- [Building vs Using Parsers](../../code-to-figma/RECOMMENDATIONS.md)
+- [code-to-figma Repository](https://github.com/kylebrodeur/code-to-figma)
+- [CLI Documentation](https://github.com/kylebrodeur/code-to-figma/tree/main/packages/cli)
+- [Architecture Decisions](https://github.com/kylebrodeur/code-to-figma/blob/main/docs/RECOMMENDATIONS.md)
 - [Figma Plugin API](https://www.figma.com/plugin-docs/)
