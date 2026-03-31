@@ -1,0 +1,25 @@
+[
+  {"query": "let's work on the UI", "should_trigger": true},
+  {"query": "show me what the app looks like right now", "should_trigger": true},
+  {"query": "take a screenshot of the homepage", "should_trigger": true},
+  {"query": "create a wireframe for the dashboard layout", "should_trigger": true},
+  {"query": "design the layout for the onboarding flow", "should_trigger": true},
+  {"query": "before we build this, let's decide on the design", "should_trigger": true},
+  {"query": "browser view of the current state", "should_trigger": true},
+  {"query": "let's iterate on the survey page UI", "should_trigger": true},
+  {"query": "I want to review what the product browser looks like", "should_trigger": true},
+  {"query": "can you open the app and tell me what you see", "should_trigger": true},
+  {"query": "let's do a design review before we build the results page", "should_trigger": true},
+  {"query": "screenshot and review the mobile layout", "should_trigger": true},
+
+  {"query": "write a unit test for this React component", "should_trigger": false},
+  {"query": "fix this TypeScript error in my service file", "should_trigger": false},
+  {"query": "deploy the app to Vercel", "should_trigger": false},
+  {"query": "add a new API route for user authentication", "should_trigger": false},
+  {"query": "refactor this utility function to use reduce instead of forEach", "should_trigger": false},
+  {"query": "help me resolve this git merge conflict", "should_trigger": false},
+  {"query": "explain how React server components work", "should_trigger": false},
+  {"query": "run the test suite and show me what's failing", "should_trigger": false},
+  {"query": "analyze the dead code in this codebase", "should_trigger": false},
+  {"query": "set up CI/CD with GitHub Actions", "should_trigger": false}
+]

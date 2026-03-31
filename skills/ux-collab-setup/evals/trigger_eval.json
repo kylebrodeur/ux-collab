@@ -1,0 +1,18 @@
+[
+  {"query": "set up ux-collab", "should_trigger": true},
+  {"query": "ux-collab isn't working, can you fix it", "should_trigger": true},
+  {"query": "install the ux-collab dependencies", "should_trigger": true},
+  {"query": "get ux-collab ready to use", "should_trigger": true},
+  {"query": "the check script is failing, playwright MCP not found", "should_trigger": true},
+  {"query": "ImageMagick is missing, how do I install it", "should_trigger": true},
+  {"query": "fix the ux-collab setup", "should_trigger": true},
+  {"query": "something's broken with ux-collab, screenshots aren't working", "should_trigger": true},
+
+  {"query": "let's work on the UI", "should_trigger": false},
+  {"query": "take a screenshot of the homepage", "should_trigger": false},
+  {"query": "create a wireframe for the dashboard", "should_trigger": false},
+  {"query": "write a unit test for this component", "should_trigger": false},
+  {"query": "deploy the app to Vercel", "should_trigger": false},
+  {"query": "fix this TypeScript error", "should_trigger": false},
+  {"query": "run the analysis on the codebase", "should_trigger": false}
+]
