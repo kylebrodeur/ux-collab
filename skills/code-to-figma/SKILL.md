@@ -1,311 +1,116 @@
 ---
 name: code-to-figma
-description: "Sync React components to Figma designs. Use when: converting code components to Figma designs, creating design system documentation from code, or keeping Figma in sync with implementation. Trigger phrases: 'sync this component to Figma', 'generate Figma from code', 'create design system in Figma from components'."
-compatibility: "Requires: code-to-figma CLI (npm install -g @kylebrodeur/code-to-figma) or npx. Optional: Figma plugin 'Code to Figma' installed."
+description: "Sync React components to Figma designs. Use when: 'sync component to Figma', 'generate Figma from code', 'create design system in Figma', 'export React to Figma'. Parses React/TSX with Babel AST, resolves Tailwind classes, outputs Figma-compatible JSON for loading via Figma Desktop plugin."
+compatibility: "Requires: Node.js 18+, @kylebrodeur/code-to-figma CLI (npm i -g or npx). Optional: Figma Desktop with local plugin loaded from packages/plugin/manifest.json."
 license: MIT
 metadata:
   author: kylebrodeur
-  version: "0.1.0"
+  version: "0.2.0"
+  upstream: https://github.com/kylebrodeur/code-to-figma
 ---
 
 # Code-to-Figma Skill
 
-Sync React components to Figma designs. Bridges the gap between code-first development and design documentation.
-
-## When to Use
-
-- Converting React components to Figma for stakeholder review
-- Generating design system documentation from existing codebase
-- Keeping Figma designs in sync with shipped code
-- Creating component libraries in Figma from code
-
-## Prerequisites
-
-```bash
-# Install CLI globally
-npm install -g @kylebrodeur/code-to-figma
-
-# Or use npx (no install)
-npx @kylebrodeur/code-to-figma init
-```
-
-**Figma Plugin Setup:**
-1. Install "Code to Figma" plugin in Figma Desktop
-2. Or use REST API if you have Figma Enterprise
+> **This skill is maintained upstream in [kylebrodeur/code-to-figma](https://github.com/kylebrodeur/code-to-figma).**
+> Install the authoritative version with:
+> ```bash
+> npx skills add kylebrodeur/code-to-figma
+> ```
+> The upstream skill contains the complete command reference, supported patterns, troubleshooting, and plugin setup. After install it loads automatically alongside ux-collab.
 
 ---
 
-## The Workflow
+## Quick Reference
+
+### Workflow
 
 ```
-CODE → PARSE → RESOLVE → GENERATE → SYNC → FIGMA
-  ↑                                                  ↓
-  └──────────── UPDATE ← COMPARE ← VERIFY ────────────┘
+1. code-to-figma scan src/components/Button.tsx
+   → .figma/Button.figma.json
+
+2. code-to-figma plugin-output -i .figma -o plugin-data.json
+   → plugin-data.json  (all components bundled)
+
+3. Figma Desktop → Plugins → Development → Import plugin from manifest…
+   → select packages/plugin/manifest.json from the code-to-figma repo
+
+4. Plugin UI → Load file → plugin-data.json → check components → Build selected
+   → Frames appear on page "code-to-figma"
 ```
 
-### Step 1 — CODE: Select Component
+### Commands
 
-Identify the React component to sync:
+| Command | Purpose |
+|---------|---------|
+| `init` | Create `.code-to-figma.json` config |
+| `scan <pattern>` | Parse component(s) → `.figma.json` per file |
+| `scan --watch` | Re-scan on save |
+| `scan -t <path>` | Custom Tailwind config path |
+| `scan --validate` | Validate generated JSON |
+| `plugin-output` | Bundle `.figma.json` files → `plugin-data.json` |
+| `read --file-key <key>` | Read components from Figma REST API (read-only) |
 
-```bash
-# Example component
-src/components/Button.tsx
-```
-
-**Requirements:**
-- Functional component with defined props
-- Uses Tailwind CSS or CSS modules
-- Has variants (optional but recommended)
-
-### Step 2 — PARSE: Extract Structure
-
-```bash
-code-to-figma scan src/components/Button.tsx
-```
-
-**What gets extracted:**
-- Component name
-- Props and their types
-- Variants (from props like `variant`, `size`)
-- className utilities
-- JSX structure (simplified)
-
-### Step 3 — RESOLVE: Convert to Figma Properties
-
-```bash
-# Resolve Tailwind classes to actual values
-code-to-figma scan src/components/Button.tsx --resolve-tailwind
-```
-
-**Resolves:**
-- `bg-blue-500` → `{ r: 0.2, g: 0.4, b: 1, a: 1 }`
-- `p-4` → `padding: 16`
-- `gap-2` → `itemSpacing: 8`
-- `rounded-md` → `cornerRadius: 6`
-
-### Step 4 — GENERATE: Figma JSON
-
-```bash
-# Output to .figma/Button.figma.json
-code-to-figma scan src/components/Button.tsx -o .figma
-```
-
-**Generated structure:**
-```json
-{
-  "name": "Button",
-  "type": "COMPONENT_SET",
-  "variants": [
-    {
-      "name": "primary/default",
-      "properties": { "variant": "primary", "size": "default" },
-      "frame": {
-        "width": 120,
-        "height": 40,
-        "fills": [{ "type": "SOLID", "color": { "r": 0.2, "g": 0.4, "b": 1 } }],
-        "padding": { "top": 8, "right": 16, "bottom": 8, "left": 16 }
-      }
-    }
-  ],
-  "autoLayout": {
-    "mode": "HORIZONTAL",
-    "gap": 8,
-    "padding": { "top": 8, "right": 16, "bottom": 8, "left": 16 }
-  }
-}
-```
-
-### Step 5 — SYNC: Upload to Figma
-
-**Option A: Plugin (Recommended)**
-```bash
-# Generate plugin-compatible bundle
-code-to-figma plugin-output -i .figma -o plugin-data.json
-
-# Then in Figma:
-# Plugins → Code to Figma → Import from JSON
-```
-
-**Option B: REST API (Enterprise only)**
-```bash
-code-to-figma sync --file-key ABC123
-```
-
----
-
-## Supported Patterns
-
-### ✅ Works Well
-
-```tsx
-// Simple props
-interface ButtonProps {
-  variant: 'primary' | 'secondary' | 'ghost';
-  size: 'sm' | 'md' | 'lg';
-  children: React.ReactNode;
-}
-
-// Static Tailwind classes
-export function Button({ variant, size, children }: ButtonProps) {
-  const base = "rounded-md font-medium transition-colors";
-  const variants = {
-    primary: "bg-blue-500 text-white hover:bg-blue-600",
-    secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
-    ghost: "bg-transparent text-gray-600 hover:bg-gray-100"
-  };
-  const sizes = {
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-4 py-2 text-base",
-    lg: "px-6 py-3 text-lg"
-  };
-  
-  return (
-    <button className={`${base} ${variants[variant]} ${sizes[size]}`}>
-      {children}
-    </button>
-  );
-}
-```
-
-### ⚠️ Limited Support
-
-```tsx
-// Dynamic class names
-className={isActive ? 'bg-blue-500' : 'bg-gray-500'}
-
-// Runtime computed values
-className={`p-${customPadding}`}
-
-// Conditional spread
-className={cn(base, variant === 'primary' && 'bg-blue-500')}
-```
-
-**Workaround:** Use resolved classes via `getComputedStyle` or manual token mapping.
-
-### ❌ Not Supported (Yet)
-
-```tsx
-// CSS-in-JS
-const Button = styled.button`...`
-
-// Complex runtime logic
-className={computeClasses(props)}
-
-// Responsive variants
-className="md:bg-blue-500 lg:bg-red-500"
-```
-
----
-
-## Configuration
-
-`.code-to-figma.json`:
+### Config (`.code-to-figma.json`)
 
 ```json
 {
-  "figmaFileKey": "ABC123",
+  "figmaFileKey": "YOUR_FILE_KEY",
+  "figmaAccessToken": "YOUR_ACCESS_TOKEN",
   "componentGlob": "src/components/**/*.tsx",
   "tokenMapping": {
     "--color-primary": "primary/500",
-    "--color-secondary": "secondary/500",
-    "--space-4": "spacing/4",
-    "--radius-md": "radius/6"
+    "--color-secondary": "secondary/500"
   },
   "outputDir": ".figma",
   "framework": "react",
   "styling": "tailwind",
   "parserOptions": {
-    "extractVariantsFromProps": ["variant", "size", "color"],
-    "resolveTailwind": true,
-    "includeJsxStructure": false
+    "extractVariantsFromProps": true,
+    "detectClassNameUtilities": true,
+    "extractSpacing": true
   }
 }
 ```
 
----
-
-## Integration with ux-collab
+### Integration with ux-collab
 
 Add to `.ux-collab.md`:
 
 ```yaml
-syncToFigma:
+codeToFigma:
   enabled: true
-  cliCommand: "npx code-to-figma"
-  outputDir: ".figma"
-  autoSync: false
-  
-  # When to trigger during ux-collab loop
-  onBuild: true      # After BUILD phase
-  onVerify: false    # After VERIFY (optional)
-  
-  # Conflict resolution
-  onConflict: "prompt"  # prompt, overwrite, skip
+  cliCommand: "npx @kylebrodeur/code-to-figma"
+  onBuild: true
 ```
 
-**Workflow with ux-collab:**
+During the **SYNC** phase: scan built components → `plugin-output` → import in Figma Desktop.
 
-```
-SEE → DISCUSS → IDEATE → SPECIFY → BUILD → VERIFY → SYNC → RECORD
-                                                    ↑
-                                           [code-to-figma skill]
-```
+### Figma Desktop Plugin Setup (one-time)
 
-**Example session:**
+The plugin ships as source in the code-to-figma repo — it is **not** on the Figma Community marketplace.
 
-```
-User: "Let's work on the Button component"
-Agent: [SEE] Screenshot current implementation
-User: "Sync this to Figma for the design team to review"
-Agent: [SYNC] Running code-to-figma scan
-Agent: [SYNC] Generated 4 variants (primary, secondary, ghost × sm, md, lg)
-Agent: [SYNC] Upload to Figma file "Design System"
-Agent: [RECORD] Updated DESIGN_DECISIONS.md with Figma link
-```
+1. Clone or download [kylebrodeur/code-to-figma](https://github.com/kylebrodeur/code-to-figma)
+2. Open **Figma Desktop** (plugin API unavailable in browser)
+3. **Plugins → Development → Import plugin from manifest…**
+4. Select `packages/plugin/manifest.json` from the repo
+5. Plugin appears under **Plugins → Development → code-to-figma**
 
----
+### Figma MCP (optional — design system read)
 
-## Commands Reference
+To read tokens/components from Figma files during the SPECIFY/VERIFY phases, configure the Figma MCP:
 
-| Command | Purpose | Example |
-|---------|---------|---------|
-| `init` | Create config | `code-to-figma init` |
-| `scan <file>` | Parse component | `code-to-figma scan Button.tsx` |
-| `scan --watch` | Watch for changes | `code-to-figma scan --watch` |
-| `sync` | Upload to Figma | `code-to-figma sync --file-key ABC123` |
-| `plugin-output` | Generate plugin JSON | `code-to-figma plugin-output` |
-
----
-
-## Troubleshooting
-
-### "No variants detected"
-
-Ensure props use literal unions:
-```tsx
-variant: 'primary' | 'secondary'  // ✅ Detected
-variant: string                   // ❌ Too broad
+```json
+// .mcp.json
+{
+  "mcpServers": {
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "@figma/mcp"],
+      "env": { "FIGMA_API_KEY": "your-api-key" }
+    }
+  }
+}
 ```
 
-### "Tailwind classes not resolved"
+Requires Figma Pro. See [figma-integration.md](../ux-collab/figma-integration.md) for available tools.
 
-Ensure Tailwind config is accessible:
-```bash
-code-to-figma scan Button.tsx --tailwind-config ./tailwind.config.ts
-```
-
-### "Figma plugin shows error"
-
-Check JSON validity:
-```bash
-code-to-figma scan Button.tsx --validate
-```
-
----
-
-## Resources
-
-- [code-to-figma Repository](https://github.com/kylebrodeur/code-to-figma)
-- [CLI Documentation](https://github.com/kylebrodeur/code-to-figma/tree/main/packages/cli)
-- [Architecture Decisions](https://github.com/kylebrodeur/code-to-figma/blob/main/docs/RECOMMENDATIONS.md)
-- [Figma Plugin API](https://www.figma.com/plugin-docs/)

@@ -13,6 +13,14 @@
       "path": "skills/ux-collab-setup/SKILL.md",
       "description": "Install and configure all ux-collab dependencies — agent-browser, ImageMagick, Playwright MCP (optional), Figma MCP (optional), Lucid MCP (optional), project config",
       "tags": ["setup", "install", "dependencies", "ux-collab", "agent-browser"]
+    },
+    {
+      "name": "code-to-figma",
+      "path": "skills/code-to-figma/SKILL.md",
+      "upstream": "https://github.com/kylebrodeur/code-to-figma",
+      "install": "npx skills add kylebrodeur/code-to-figma",
+      "description": "Sync React components to Figma via CLI + local Figma Desktop plugin. Parses TSX/Babel AST, resolves Tailwind, generates Figma JSON, creates Figma Variable Collections from tokenMapping.",
+      "tags": ["figma", "react", "tailwind", "design-system", "code-to-figma", "sync", "plugin"]
     }
   ],
   "agents": [

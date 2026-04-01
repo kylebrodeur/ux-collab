@@ -286,21 +286,20 @@ Open decisions: [?] sidebar collapse behavior on mobile
 
 1. **Before BUILD:** Pull tokens and component specs
    ```
-   - mcp_figma_get_variables → Extract design tokens
-   - mcp_figma_get_code → Pull Code Connect snippets
-   - mcp_figma_get_component_props → See available variants
+   - mcp_figma_get_variable_defs   → Extract design tokens
+   - mcp_figma_get_design_context  → Code Connect snippet + variants + screenshot
    - Verify all tokens exist in local CSS
    ```
 
 2. **During BUILD:** Reference component specs
    ```
-   - mcp_figma_get_screenshot → See exact design
-   - mcp_figma_get_design_tokens → Verify token names match
+   - mcp_figma_get_screenshot      → See exact design
+   - mcp_figma_get_variable_defs   → Verify token names match
    ```
 
 3. **After BUILD:** Verify implementation
    ```
-   - mcp_figma_get_screenshot → Capture design
+   - mcp_figma_get_screenshot      → Capture design
    - Compare to agent-browser screenshot
    - Verify tokens match implementation
    ```
@@ -353,14 +352,14 @@ ls app/ components/ src/ 2>/dev/null | head -20
   - Additional registries: @react-bits, @magicui, etc.
 - **No new dependencies** without explicit discussion (except from approved registries)
 - **Accessibility semantics:** correct heading levels, button vs. link, ARIA labels on interactive elements
-- **Match Figma tokens** via mcp_figma_get_design_tokens when available
+- **Match Figma tokens** via mcp_figma_get_variable_defs when available
 
 ### Design System Check (if Figma MCP available):
 ```
 Before coding:
 [ ] Read .ux-collab.md preferences section
-[ ] mcp_figma_search_components → Find matching component
-[ ] mcp_figma_get_code → Pull Code Connect snippet
+[ ] mcp_figma_search_design_system → Find matching component
+[ ] mcp_figma_get_design_context   → Code Connect snippet + variants
 [ ] Check component matches preferred primitives (base-ui vs Radix, from preferences)
 [ ] Verify component exists in local codebase OR installable from approved registries
 [ ] Check token names match local CSS
@@ -424,7 +423,7 @@ mcp_figma_get_screenshot → design.png
 
 **Token compliance check:**
 ```
-1. mcp_figma_get_design_tokens → Extract expected tokens
+1. mcp_figma_get_variable_defs → Extract expected tokens
 2. Check computed styles in browser:
    - agent-browser open <url>
    - agent-browser click @element-ref
@@ -608,15 +607,14 @@ Scroll:      mcp_playwright_browser_mouse_wheel { deltaY }
 
 ```
 # Token & Component Access
-Get variables:     mcp_figma_get_variables { fileKey, variableId }
-Search components: mcp_figma_search_components { fileKey, query }
-Get component:     mcp_figma_get_component_props { fileKey, componentId }
-Get code snippet:  mcp_figma_get_code { fileKey, nodeId }
-Get screenshot:    mcp_figma_get_screenshot { fileKey, nodeId }
+Get variables:      mcp_figma_get_variable_defs   { fileKey }
+Search components:  mcp_figma_search_design_system { fileKey, query }
+Get design context: mcp_figma_get_design_context  { fileKey, nodeId }  ← primary
+Get screenshot:     mcp_figma_get_screenshot      { fileKey, nodeId }
 
-# Design Verification
-Get design tokens: mcp_figma_get_design_tokens { fileKey, nodeId }
-Get metadata:      mcp_figma_get_component_metadata { fileKey, componentId }
+# Code Connect
+Get map:            mcp_figma_get_code_connect_map          { fileKey }
+Suggest mappings:   mcp_figma_get_code_connect_suggestions  { fileKey }
 ```
 
 ### Lucid (Wireframes)

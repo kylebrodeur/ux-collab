@@ -45,24 +45,24 @@ Figma MCP (Model Context Protocol) enables AI agents to:
 
 ### Get Design Context
 ```
-mcp_figma_get_file_info → Get file metadata, page structure
-mcp_figma_get_screenshot → Capture design as image
-mcp_figma_get_code → Pull Code Connect snippets (React, Vue, etc.)
-mcp_figma_get_design_tokens → Extract token values from nodes
-mcp_figma_get_component_props → Get variant properties
-mcp_figma_get_variables → Pull design variables (colors, typography, spacing)
-mcp_figma_get_component_metadata → Get component description, documentation
+mcp_figma_get_design_context  → Primary tool: returns code, screenshot, Code Connect hints for a node
+mcp_figma_get_metadata        → File metadata and page structure
+mcp_figma_get_screenshot      → Capture design node as image
+mcp_figma_get_variable_defs   → Extract variable/token values (colors, spacing, typography)
+mcp_figma_search_design_system → Search for components by name/pattern
 ```
 
-### Find Components
+### Code Connect
 ```
-mcp_figma_search_components → Find components by name/pattern
-mcp_figma_get_component_instances → List all instances of a component
+mcp_figma_get_code_connect_map          → Get existing Code Connect mappings
+mcp_figma_get_code_connect_suggestions  → Suggest component mappings from codebase
+mcp_figma_add_code_connect_map          → Add/update a Code Connect mapping
 ```
 
-### Compare & Verify
+### Design System
 ```
-mcp_figma_compare_with_screenshot → Compare Figma design to implementation
+mcp_figma_create_design_system_rules    → Create/update design system rules for AI guidance
+mcp_figma_search_design_system          → Search components, styles, and variables
 ```
 
 ## Workflow: Design-to-Code with Figma MCP
@@ -71,8 +71,8 @@ mcp_figma_compare_with_screenshot → Compare Figma design to implementation
 Before building, pull tokens from Figma to ensure alignment:
 
 ```
-1. mcp_figma_get_variables → Extract all primitive tokens
-2. mcp_figma_get_variables → Extract semantic tokens
+1. mcp_figma_get_variable_defs → Extract all primitive tokens
+2. mcp_figma_get_variable_defs → Extract semantic tokens
 3. Read local CSS files → Compare token names
 4. If mismatch: warn and use Figma as source of truth
 ```
@@ -81,11 +81,10 @@ Before building, pull tokens from Figma to ensure alignment:
 When implementing a new feature:
 
 ```
-1. mcp_figma_search_components → Find matching components
-2. mcp_figma_get_component_props → See available variants
-3. mcp_figma_get_code → Pull Code Connect snippet
-4. Verify component exists in local codebase
-5. If component missing: flag for design system update
+1. mcp_figma_search_design_system → Find matching components
+2. mcp_figma_get_design_context  → Get variant props, Code Connect snippet, screenshot
+3. Verify component exists in local codebase
+4. If component missing: flag for design system update
 ```
 
 ### Step 3: Implementation Verification
@@ -93,9 +92,9 @@ After building:
 
 ```
 1. agent-browser screenshot → Capture implementation
-2. mcp_figma_get_screenshot → Capture design at same viewport
+2. mcp_figma_get_screenshot  → Capture design at same viewport
 3. Compare: token usage, spacing, typography
-4. mcp_figma_get_design_tokens → Verify tokens used correctly
+4. mcp_figma_get_variable_defs → Verify tokens used correctly
 ```
 
 ## Code Connect MCP Instructions

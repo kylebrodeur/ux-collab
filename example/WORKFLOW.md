@@ -106,14 +106,12 @@ User: "Pull the Step Indicator component from Figma and use it for the guide."
 
 **Agent actions (Figma MCP):**
 ```
-1. mcp_figma_search_components { query: "Step Indicator" }
+1. mcp_figma_search_design_system { query: "Step Indicator" }
    → Found: "StepIndicator" (id: 123:456)
 
-2. mcp_figma_get_component_props { componentId: "123:456" }
+2. mcp_figma_get_design_context { fileKey, nodeId: "123:456" }
    → Variants: default, completed, active
    → Props: stepNumber, title, description, status
-
-3. mcp_figma_get_code { nodeId: "123:456" }
    → Code Connect snippet:
      <StepIndicator
        stepNumber={1}
@@ -121,11 +119,11 @@ User: "Pull the Step Indicator component from Figma and use it for the guide."
        status="pending"
      />
 
-4. mcp_figma_get_design_tokens { nodeId: "123:456" }
+3. mcp_figma_get_variable_defs { fileKey }
    → Uses: --step-indicator-gap, --step-indicator-size
    → Colors: --step-indicator-active-bg, --step-indicator-completed-bg
 
-5. Verify tokens exist in local CSS:
+4. Verify tokens exist in local CSS:
    grep --step-indicator src/styles/tokens.css
    → Present ✓
 ```

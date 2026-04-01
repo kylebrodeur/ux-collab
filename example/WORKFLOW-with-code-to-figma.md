@@ -108,8 +108,11 @@ Synced to Figma:
 
 Plugin bundle ready: plugin-data.json
 
-Import in Figma:
-Plugins → Code to Figma → Import from JSON
+Import in Figma Desktop:
+  Plugins → Development → code-to-figma
+  → Load file → plugin-data.json
+  → Select all → Build selected
+  → Frames appear on page: code-to-figma
 ```
 
 ---

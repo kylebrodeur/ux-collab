@@ -77,7 +77,7 @@ styles/
 
 ### Step 3: Verify with Figma (if available)
 ```
-1. mcp_figma_get_variables → Check if token exists in Figma
+1. mcp_figma_get_variable_defs → Check if token exists in Figma
 2. Verify name matches Figma variable
 3. If mismatch: document in DESIGN_DECISIONS.md
 ```
@@ -99,7 +99,7 @@ When implementing new components, verify:
 If using Figma MCP, always verify tokens before using:
 
 ```
-1. mcp_figma_get_variables { fileKey }
+1. mcp_figma_get_variable_defs { fileKey }
 2. Check token name matches local CSS custom property
 3. Example: Figma "bg/primary" → CSS "--bg-primary"
 ```

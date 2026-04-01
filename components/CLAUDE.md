@@ -117,13 +117,12 @@ export function Button({ variant = 'primary', children, ...props }: ButtonProps)
 ### When Building from Figma:
 
 ```
-1. mcp_figma_search_components → Find component in Figma
-2. mcp_figma_get_component_props → See available variants
-3. mcp_figma_get_code → Pull Code Connect snippet
-4. Verify tokens exist in styles/semantic.css
-5. Create component following Figma specs
-6. Run design-verification agent
-7. Run component-compliance-checker agent
+1. mcp_figma_search_design_system → Find component in Figma
+2. mcp_figma_get_design_context   → Variants, Code Connect snippet, screenshot
+3. Verify tokens exist in styles/semantic.css
+4. Create component following Figma specs
+5. Run design-verification agent
+6. Run component-compliance-checker agent
 ```
 
 ### Token Usage Pattern
@@ -317,11 +316,10 @@ When Figma MCP is available, use this workflow:
 ### Before Building:
 
 ```
-1. mcp_figma_search_components { query: "Button" }
+1. mcp_figma_search_design_system { query: "Button" }
 2. If found:
-   - mcp_figma_get_component_props → See variants
-   - mcp_figma_get_code → Get Code Connect snippet
-   - mcp_figma_get_design_tokens → Verify token names
+   - mcp_figma_get_design_context → Variants + Code Connect snippet + screenshot
+   - mcp_figma_get_variable_defs  → Verify token names
 3. Implement following Figma spec exactly
 4. Document in component comments: "Figma ref: [filename]#[node-id]"
 ```
@@ -344,7 +342,7 @@ When Figma MCP is available, use this workflow:
 User: "Build a new Card component"
 → Phase: BUILD
 → Steps:
-   1. Check if Card exists in Figma: mcp_figma_search_components
+   1. Check if Card exists in Figma: mcp_figma_search_design_system
    2. If yes: pull specs, tokens, code snippet
    3. Implement component
    4. Run design-verification agent

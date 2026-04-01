@@ -57,7 +57,7 @@ Required checks:
 ### Token Compliance Rules
 
 1. **Always use semantic tokens**, never hardcoded hex values
-2. **Verify tokens exist in Figma** before using (via `mcp_figma_get_variables`)
+2. **Verify tokens exist in Figma** before using (via `mcp_figma_get_variable_defs`)
 3. **CSS custom properties only** — no inline styles for colors/spacing
 4. **Match Figma variable names** to CSS custom property names
 
@@ -291,9 +291,9 @@ MCP Instructions:
 ### Before BUILD
 ```
 [ ] Read .ux-collab.md preferences again
-[ ] Pull tokens from Figma (if available): mcp_figma_get_variables
-[ ] Verify component exists: mcp_figma_search_components
-[ ] Get Code Connect snippet: mcp_figma_get_code
+[ ] Pull tokens from Figma (if available): mcp_figma_get_variable_defs
+[ ] Verify component exists: mcp_figma_search_design_system
+[ ] Get design context + Code Connect: mcp_figma_get_design_context
 [ ] Check component matches preferred primitives (base-ui vs Radix)
 [ ] Confirm all tokens exist in local CSS
 ```

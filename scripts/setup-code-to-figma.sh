@@ -57,9 +57,9 @@ else
   "framework": "react",
   "styling": "tailwind",
   "parserOptions": {
-    "extractVariantsFromProps": ["variant", "size", "color"],
-    "resolveTailwind": true,
-    "includeJsxStructure": false
+    "extractVariantsFromProps": true,
+    "detectClassNameUtilities": true,
+    "extractSpacing": true
   }
 }
 EOF
@@ -84,11 +84,8 @@ if [ -f ".ux-collab.md" ]; then
 # Code-to-Figma Integration
 codeToFigma:
   enabled: true
-  cliCommand: "npx code-to-figma"
-  outputDir: ".figma"
-  autoSync: false
+  cliCommand: "npx @kylebrodeur/code-to-figma"
   onBuild: true
-  onConflict: "prompt"
 EOF
     ok "Updated .ux-collab.md"
   fi
@@ -96,7 +93,18 @@ else
   warn ".ux-collab.md not found. Run: npx ux-collab init"
 fi
 
-# ── Step 5: Add .figma to .gitignore ──────────────────────────────────────────
+# ── Step 5: Install upstream code-to-figma skill ────────────────────────────
+section "Installing code-to-figma skill (upstream)"
+
+if command -v skills &>/dev/null; then
+  npx skills add kylebrodeur/code-to-figma 2>/dev/null && ok "Installed kylebrodeur/code-to-figma skill" || warn "Skill install failed — install manually: npx skills add kylebrodeur/code-to-figma"
+elif [ -d "~/.agents/skills" ] || [ -d "$HOME/.agents/skills" ]; then
+  warn "skills CLI not found but ~/.agents/skills exists — run manually: npx skills add kylebrodeur/code-to-figma"
+else
+  info "Skipping skill install (skills CLI not detected)"
+fi
+
+# ── Step 6: Add .figma to .gitignore ──────────────────────────────────────────
 section "Updating .gitignore"
 
 if [ -f ".gitignore" ]; then
@@ -111,7 +119,7 @@ else
   ok "Created .gitignore with .figma/"
 fi
 
-# ── Step 6: Verify Setup ────────────────────────────────────────────────────
+# ── Step 7: Verify Setup ────────────────────────────────────────────────────
 section "Verifying Setup"
 
 if command -v code-to-figma &>/dev/null; then
@@ -137,8 +145,14 @@ echo "Quick Start:"
 echo "  1. Edit .code-to-figma.json with your Figma credentials"
 echo "  2. Scan a component:"
 echo "     code-to-figma scan src/components/Button.tsx"
+echo "  3. Bundle for Figma plugin:"
+echo "     code-to-figma plugin-output -i .figma -o plugin-data.json"
 echo ""
-echo "  3. Or use with ux-collab:"
-echo "     'Sync Button component to Figma'"
+echo "Figma Desktop Plugin (one-time setup):"
+echo "  1. Clone https://github.com/kylebrodeur/code-to-figma"
+echo "  2. Figma Desktop → Plugins → Development → Import plugin from manifest…"
+echo "  3. Select packages/plugin/manifest.json from the cloned repo"
+echo "  4. Plugin appears under: Plugins → Development → code-to-figma"
+echo "  5. Load file → plugin-data.json → Build selected"
 echo ""
-echo "See: https://github.com/kylebrodeur/ux-collab"
+echo "See: https://github.com/kylebrodeur/code-to-figma"

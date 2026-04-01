@@ -121,10 +121,10 @@ Add to your `.mcp.json`:
 ```
 
 **MCP Commands** (when available):
-- `mcp_figma_get_variables` — Pull design tokens
-- `mcp_figma_get_code` — Get Code Connect snippets
+- `mcp_figma_get_variable_defs` — Pull design tokens
+- `mcp_figma_get_design_context` — Get Code Connect snippets + variant props
 - `mcp_figma_get_screenshot` — Capture Figma designs
-- `mcp_figma_search_components` — Find components
+- `mcp_figma_search_design_system` — Find components
 
 See [Figma Integration Guide](skills/ux-collab/figma-integration.md) for full workflow.
 

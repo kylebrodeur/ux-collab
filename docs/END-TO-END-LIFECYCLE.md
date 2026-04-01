@@ -242,9 +242,9 @@ Agent creates Markdown wireframe:
 
 **Agent queries Figma:**
 ```
-mcp_figma_get_variables → Pull design tokens
-mcp_figma_get_code → Get React component code
-mcp_figma_search_components → Find existing components
+mcp_figma_get_variable_defs    → Pull design tokens
+mcp_figma_get_design_context   → Get React component code + variant props
+mcp_figma_search_design_system → Find existing components
 ```
 
 **Verify implementation:**
